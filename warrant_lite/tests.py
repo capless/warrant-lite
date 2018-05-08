@@ -2,7 +2,7 @@ import unittest
 
 from envs import env
 
-from warrant_srp import WarrantLite, TokenVerificationException
+from warrant_lite import WarrantLite, TokenVerificationException
 
 
 class WarrantLiteTestCase(unittest.TestCase):
