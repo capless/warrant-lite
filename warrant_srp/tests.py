@@ -2,7 +2,7 @@ import unittest
 
 from envs import env
 
-from . import AWSSRP
+from warrant_srp import AWSSRP
 
 class AWSSRPTestCase(unittest.TestCase):
 

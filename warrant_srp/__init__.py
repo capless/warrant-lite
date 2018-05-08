@@ -251,3 +251,19 @@ class AWSSRP(object):
             return tokens
         else:
             raise NotImplementedError('The %s challenge is not supported' % response['ChallengeName'])
+
+    def verify_token(self, token, id_name, token_use):
+        kid = jwt.get_unverified_header(token).get('kid')
+        unverified_claims = jwt.get_unverified_claims(token)
+        token_use_verified = unverified_claims.get('token_use') == token_use
+        if not token_use_verified:
+            raise TokenVerificationException('Your {} token use could not be verified.')
+        hmac_key = self.get_key(kid)
+        try:
+            verified = jwt.decode(token, hmac_key, algorithms=['RS256'],
+                                  audience=unverified_claims.get('aud'),
+                                  issuer=unverified_claims.get('iss'))
+        except JWTError:
+            raise TokenVerificationException('Your {} token could not be verified.')
+        setattr(self, id_name, token)
+        return verified
