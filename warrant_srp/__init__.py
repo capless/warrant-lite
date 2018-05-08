@@ -7,11 +7,18 @@ import re
 
 import boto3
 import os
+import requests
 import six
 
+from envs import env
+from jose import jwt, JWTError
 
 class ForceChangePasswordException(Exception):
     """Raised when the user is forced to change their password"""
+
+
+class TokenVerificationException(Exception):
+    """Raised when token verification fails."""
 
 
 # https://github.com/aws/amazon-cognito-identity-js/blob/master/src/AuthenticationHelper.js#L22
@@ -93,7 +100,7 @@ def calculate_u(big_a, big_b):
     return hex_to_long(u_hex_hash)
 
 
-class AWSSRP(object):
+class WarrantLite(object):
 
     NEW_PASSWORD_REQUIRED_CHALLENGE = 'NEW_PASSWORD_REQUIRED'
     PASSWORD_VERIFIER_CHALLENGE = 'PASSWORD_VERIFIER'
@@ -115,6 +122,7 @@ class AWSSRP(object):
         self.k = hex_to_long(hex_hash('00' + n_hex + '0' + g_hex))
         self.small_a_value = self.generate_random_small_a()
         self.large_a_value = self.calculate_a()
+        self.user_pool_region = self.pool_id.split('_')[0]
 
     def generate_random_small_a(self):
         """
@@ -267,3 +275,25 @@ class AWSSRP(object):
             raise TokenVerificationException('Your {} token could not be verified.')
         setattr(self, id_name, token)
         return verified
+
+    def get_keys(self):
+
+        try:
+            return self.pool_jwk
+        except AttributeError:
+            #Check for the dictionary in environment variables.
+            pool_jwk_env = env('COGNITO_JWKS', {},var_type='dict')
+            if len(pool_jwk_env.keys()) > 0:
+                self.pool_jwk = pool_jwk_env
+                return self.pool_jwk
+            #If it is not there use the requests library to get it
+            self.pool_jwk = requests.get(
+                'https://cognito-idp.{}.amazonaws.com/{}/.well-known/jwks.json'.format(
+                    self.user_pool_region,self.pool_id
+                )).json()
+            return self.pool_jwk
+
+    def get_key(self,kid):
+        keys = self.get_keys().get('keys')
+        key = list(filter(lambda x:x.get('kid') == kid,keys))
+        return key[0]
