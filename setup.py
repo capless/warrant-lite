@@ -7,7 +7,7 @@ def parse_requirements(filename):
     return [line for line in lineiter if line and not line.startswith("#")]
 
 
-version = '1.0.1'
+version = '1.0.2'
 
 README="""Small Python library for process SRP requests for AWS Cognito. This library was initially included in the [Warrant](https://www.github.com/capless/warrant) library. We decided to separate it because not all projects and workfows need all of the helper classes and functions in Warrant."""
 
@@ -29,9 +29,6 @@ setup(
     url='https://github.com/capless/warrant-lite',
     license='Apache License 2.0',
     install_requires=parse_requirements('requirements.txt'),
-    extras_require={
-        'test': parse_requirements('requirements_test.txt')
-    },
     include_package_data=True,
     zip_safe=True,
 

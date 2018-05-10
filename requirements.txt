@@ -1,3 +1,4 @@
 boto3>=1.4.3
+envs>=1.2.4
 python-jose>=3.0.0
 requests>=2.18.4
