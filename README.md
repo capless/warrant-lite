@@ -10,7 +10,7 @@ pip install warrant-lite
 ## Usage
 
 ```python
-from warrant_srp import WarrantLite
+from warrant_lite import WarrantLite
 
 
 wl = WarrantLite(username='username', password='password',
