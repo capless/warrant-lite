@@ -218,6 +218,7 @@ class WarrantLite(object):
         )
         if response['ChallengeName'] == self.PASSWORD_VERIFIER_CHALLENGE:
             challenge_response = self.process_challenge(response['ChallengeParameters'])
+            challenge_response['USERNAME'] = self.username
             tokens = boto_client.respond_to_auth_challenge(
                 ClientId=self.client_id,
                 ChallengeName=self.PASSWORD_VERIFIER_CHALLENGE,
