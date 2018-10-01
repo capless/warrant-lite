@@ -1,8 +1,10 @@
 import base64
 import binascii
+import contextlib
 import datetime
 import hashlib
 import hmac
+import locale
 import re
 
 import boto3
@@ -100,6 +102,13 @@ def calculate_u(big_a, big_b):
     return hex_to_long(u_hex_hash)
 
 
+@contextlib.contextmanager
+def temp_locale(new_locale):
+    original = locale.getlocale()
+    yield locale.setlocale(locale.LC_ALL, new_locale)
+    locale.setlocale(locale.LC_ALL, original)
+
+
 class WarrantLite(object):
 
     NEW_PASSWORD_REQUIRED_CHALLENGE = 'NEW_PASSWORD_REQUIRED'
@@ -189,7 +198,8 @@ class WarrantLite(object):
         srp_b_hex = challenge_parameters['SRP_B']
         secret_block_b64 = challenge_parameters['SECRET_BLOCK']
         # re strips leading zero from a day number (required by AWS Cognito)
-        timestamp = re.sub(r" 0(\d) ", r" \1 ",
+        with temp_locale(('en_US', 'UTF-8')):
+            timestamp = re.sub(r" 0(\d) ", r" \1 ",
                            datetime.datetime.utcnow().strftime("%a %b %d %H:%M:%S UTC %Y"))
         hkdf = self.get_password_authentication_key(user_id_for_srp,
                                                     self.password, hex_to_long(srp_b_hex), salt_hex)
