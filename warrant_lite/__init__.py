@@ -261,6 +261,10 @@ class WarrantLite(object):
                     'USERNAME': auth_params['USERNAME'],
                     'NEW_PASSWORD': new_password
                 }
+                if 'SECRET_HASH' in auth_params:
+                    challenge_response['SECRET_HASH'] = (
+                        auth_params['SECRET_HASH']
+                    )
                 new_password_response = boto_client.respond_to_auth_challenge(
                     ClientId=self.client_id,
                     ChallengeName=self.NEW_PASSWORD_REQUIRED_CHALLENGE,
