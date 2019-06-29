@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "warrant-lite"
+version = "1.0.4"
+description = "Small Python library for process SRP requests for AWS Cognito. This library was initially included in the [Warrant](https://www.github.com/capless/warrant) library. We decided to separate it because not all projects and workfows need all of the helper classes and functions in Warrant."
+authors = ["Brian Jinwright <brian@ipoots.com>"]
+license = "Apache-2.0"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+boto3 = "^1.9"
+envs = "^1.3"
+python-jose = "^3.0"
+requests = "^2.22"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
