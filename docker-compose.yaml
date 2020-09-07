@@ -12,6 +12,7 @@ services:
       - 8019:8888
     volumes:
       - ./warrant-lite/:/code/warrant-lite
+      - ~/.aws/:/root/.aws
     env_file: .env
     working_dir: /code/
     command: poetry run jupyter notebook --port=8888 --ip=0.0.0.0 --allow-root
