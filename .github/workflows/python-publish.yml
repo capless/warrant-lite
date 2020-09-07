@@ -1,0 +1,29 @@
+# This workflows will upload a Python Package using Twine when a release is created
+# For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
+
+name: Upload Python Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  deploy:
+
+    runs-on: capless/capless-docker:2
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Run tests
+      env:
+        COGNITO_CLIENT_SECRET: ${{ secrets.COGNITO_CLIENT_SECRET }}
+        COGNITO_APP_WITH_SECRET_ID: ${{ secrets.COGNITO_APP_WITH_SECRET_ID }}
+        COGNITO_USER_POOL_ID: ${{ secrets.COGNITO_USER_POOL_ID }}
+        COGNITO_TEST_USERNAME: ${{ secrets.COGNITO_TEST_USERNAME }}
+        COGNITO_TEST_PASSWORD: ${{ secrets.COGNITO_TEST_PASSWORD }}
+      run: |
+        poetry python -m unittests
