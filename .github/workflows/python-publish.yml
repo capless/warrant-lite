@@ -20,8 +20,11 @@ jobs:
         poetry install --no-dev
     - name: Run tests
       env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         COGNITO_CLIENT_SECRET: ${{ secrets.COGNITO_CLIENT_SECRET }}
-        COGNITO_APP_WITH_SECRET_ID: ${{ secrets.COGNITO_APP_WITH_SECRET_ID }}
+        COGNITO_APP_ID: ${{ secrets.COGNITO_APP_ID }}
         COGNITO_USER_POOL_ID: ${{ secrets.COGNITO_USER_POOL_ID }}
         COGNITO_TEST_USERNAME: ${{ secrets.COGNITO_TEST_USERNAME }}
         COGNITO_TEST_PASSWORD: ${{ secrets.COGNITO_TEST_PASSWORD }}
