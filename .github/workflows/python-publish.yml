@@ -26,5 +26,5 @@ jobs:
         COGNITO_TEST_USERNAME: ${{ secrets.COGNITO_TEST_USERNAME }}
         COGNITO_TEST_PASSWORD: ${{ secrets.COGNITO_TEST_PASSWORD }}
       run: |
-        poetry install
+        poetry install --no-dev
         poetry run python -m unittest
