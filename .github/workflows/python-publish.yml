@@ -15,7 +15,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Poetry Install
-      run: poetry install --no-dev
+      run: |
+        poetry update
+        poetry install --no-dev
     - name: Run tests
       env:
         COGNITO_CLIENT_SECRET: ${{ secrets.COGNITO_CLIENT_SECRET }}
